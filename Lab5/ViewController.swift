@@ -11,6 +11,15 @@ class ViewController: UIViewController {
     @IBOutlet weak var drawingView: DrawingView!
     @IBOutlet weak var numberTextField: UITextField!
     @IBOutlet weak var dsidTextField: UITextField!
+    @IBOutlet weak var modelSelector: UISegmentedControl! // New UISegmentedControl for model selection
+    @IBAction func modelSelectionChanged(_ sender: UISegmentedControl) {
+        // 打印当前选择
+        if sender.selectedSegmentIndex == 0 {
+            print("Model changed to: Turi")
+        } else if sender.selectedSegmentIndex == 1 {
+            print("Model changed to: Sklearn")
+        }
+    }
     @IBAction func clearCanvas(_ sender: UIButton) {
         drawingView.clear()
     }
@@ -128,7 +137,9 @@ class ViewController: UIViewController {
             return
         }
 
-        let url = URL(string: "http://192.168.1.69:8000/train_model_turi/\(dsid)")!
+//        let url = URL(string: "http://192.168.1.69:8000/train_model_turi/\(dsid)")!
+        let modelType = modelSelector.selectedSegmentIndex == 0 ? "turi" : "sklearn"
+        let url = URL(string: "http://192.168.1.69:8000/train_model_\(modelType)/\(dsid)")!
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
 
@@ -153,50 +164,10 @@ class ViewController: UIViewController {
     }
 
 
-    
-    //            if let data = data, let responseString = String(data: data, encoding: .utf8) {
-    //                print("Response from train: \(responseString)")
-    //            }
-
-//    func predictImage(image: UIImage, dsid: Int) {
-//        let url = URL(string: "http://192.168.1.69:8000/predict_turi/")!
-//        var request = URLRequest(url: url)
-//        request.httpMethod = "POST"
-//        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-//
-//        // 将图像转换为 Base64
-//        let imageData = image.jpegData(compressionQuality: 0.8)!
-//        let base64Image = imageData.base64EncodedString()
-//
-//        // 构造 JSON 请求体
-//        let json: [String: Any] = [
-//            "image": base64Image,
-//            "dsid": dsid
-//        ]
-//        let jsonData = try? JSONSerialization.data(withJSONObject: json)
-//        request.httpBody = jsonData
-//
-//        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-//            if let error = error {
-//                print("Prediction failed: \(error.localizedDescription)")
-//                return
-//            }
-//
-//            if let data = data {
-//                do {
-//                    let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-//                    if let prediction = jsonResponse?["prediction"] as? String {
-//                        print("Prediction: \(prediction)")
-//                    }
-//                } catch {
-//                    print("Error decoding response: \(error.localizedDescription)")
-//                }
-//            }
-//        }
-//        task.resume()
-//    }
     func predictImage(image: UIImage, dsid: Int) {
-        let url = URL(string: "http://192.168.1.69:8000/predict_turi/")!
+//        let url = URL(string: "http://192.168.1.69:8000/predict_turi/")!
+        let modelType = modelSelector.selectedSegmentIndex == 0 ? "turi" : "sklearn"
+        let url = URL(string: "http://192.168.1.69:8000/predict_\(modelType)/")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
