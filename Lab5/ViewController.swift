@@ -146,7 +146,7 @@ class ViewController: UIViewController {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        // 将图像转换为 Base64
+        // 将图转换为 Base64
         let imageData = image.jpegData(compressionQuality: 0.8)!
         let base64Image = imageData.base64EncodedString()
 
