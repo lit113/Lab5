@@ -190,18 +190,36 @@ class ViewController: UIViewController {
                 return
             }
 
+//            if let data = data {
+//                do {
+//                    let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+//                    if let prediction = jsonResponse?["prediction"] as? String {
+//                        print("Prediction: \(prediction)") // 打印预测结果
+//                    } else {
+//                        print("Prediction field missing in response.")
+//                    }
+//                } catch {
+//                    print("Error decoding response: \(error.localizedDescription)")
+//                }
+//            }
             if let data = data {
-                do {
-                    let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-                    if let prediction = jsonResponse?["prediction"] as? String {
-                        print("Prediction: \(prediction)") // 打印预测结果
-                    } else {
-                        print("Prediction field missing in response.")
+                        do {
+                            if let responseString = String(data: data, encoding: .utf8) {
+                                print("Server response: \(responseString)")  // Log the full response for debugging
+                            }
+
+                            let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+                            if let prediction = jsonResponse?["prediction"] as? Int {
+                                print("Prediction: \(prediction)")
+                            } else if let errorMessage = jsonResponse?["error"] as? String {
+                                print("Server error: \(errorMessage)")
+                            } else {
+                                print("Unexpected response format.")
+                            }
+                        } catch {
+                            print("Error decoding response: \(error.localizedDescription)")
+                        }
                     }
-                } catch {
-                    print("Error decoding response: \(error.localizedDescription)")
-                }
-            }
         }
         task.resume()
     }
