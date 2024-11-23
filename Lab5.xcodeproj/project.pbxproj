@@ -48,16 +48,6 @@
 			path = Lab5;
 			sourceTree = "<group>";
 		};
-		4503FF2C2CF18F5900EB9A57 /* Lab5Tests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Lab5Tests;
-			sourceTree = "<group>";
-		};
-		4503FF362CF18F5900EB9A57 /* Lab5UITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Lab5UITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,8 +79,6 @@
 			isa = PBXGroup;
 			children = (
 				4503FF152CF18F5600EB9A57 /* Lab5 */,
-				4503FF2C2CF18F5900EB9A57 /* Lab5Tests */,
-				4503FF362CF18F5900EB9A57 /* Lab5UITests */,
 				4503FF142CF18F5600EB9A57 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -143,9 +131,6 @@
 			dependencies = (
 				4503FF2B2CF18F5900EB9A57 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				4503FF2C2CF18F5900EB9A57 /* Lab5Tests */,
-			);
 			name = Lab5Tests;
 			packageProductDependencies = (
 			);
@@ -165,9 +150,6 @@
 			);
 			dependencies = (
 				4503FF352CF18F5900EB9A57 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				4503FF362CF18F5900EB9A57 /* Lab5UITests */,
 			);
 			name = Lab5UITests;
 			packageProductDependencies = (
