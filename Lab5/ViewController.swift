@@ -158,13 +158,50 @@ class ViewController: UIViewController {
     //                print("Response from train: \(responseString)")
     //            }
 
+//    func predictImage(image: UIImage, dsid: Int) {
+//        let url = URL(string: "http://192.168.1.69:8000/predict_turi/")!
+//        var request = URLRequest(url: url)
+//        request.httpMethod = "POST"
+//        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+//
+//        // 将图像转换为 Base64
+//        let imageData = image.jpegData(compressionQuality: 0.8)!
+//        let base64Image = imageData.base64EncodedString()
+//
+//        // 构造 JSON 请求体
+//        let json: [String: Any] = [
+//            "image": base64Image,
+//            "dsid": dsid
+//        ]
+//        let jsonData = try? JSONSerialization.data(withJSONObject: json)
+//        request.httpBody = jsonData
+//
+//        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+//            if let error = error {
+//                print("Prediction failed: \(error.localizedDescription)")
+//                return
+//            }
+//
+//            if let data = data {
+//                do {
+//                    let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+//                    if let prediction = jsonResponse?["prediction"] as? String {
+//                        print("Prediction: \(prediction)")
+//                    }
+//                } catch {
+//                    print("Error decoding response: \(error.localizedDescription)")
+//                }
+//            }
+//        }
+//        task.resume()
+//    }
     func predictImage(image: UIImage, dsid: Int) {
         let url = URL(string: "http://192.168.1.69:8000/predict_turi/")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        // 将图像转换为 Base64
+        // 将图转换为 Base64
         let imageData = image.jpegData(compressionQuality: 0.8)!
         let base64Image = imageData.base64EncodedString()
 
@@ -178,7 +215,7 @@ class ViewController: UIViewController {
 
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
-                print("Prediction failed: \(error.localizedDescription)")
+                print("Prediction failed: \(error)")
                 return
             }
 
@@ -186,7 +223,9 @@ class ViewController: UIViewController {
                 do {
                     let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
                     if let prediction = jsonResponse?["prediction"] as? String {
-                        print("Prediction: \(prediction)")
+                        print("Prediction: \(prediction)") // 打印预测结果
+                    } else {
+                        print("Prediction field missing in response.")
                     }
                 } catch {
                     print("Error decoding response: \(error.localizedDescription)")
