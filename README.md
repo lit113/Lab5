@@ -1,6 +1,3 @@
-Here's an improved version of your text formatted in Markdown:
-
----
 
 # Environment Setup Guide
 
