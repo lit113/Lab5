@@ -13,12 +13,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var dsidTextField: UITextField!
     @IBOutlet weak var modelSelector: UISegmentedControl! // New UISegmentedControl for model selection
     @IBAction func modelSelectionChanged(_ sender: UISegmentedControl) {
-        // 打印当前选择
         if sender.selectedSegmentIndex == 0 {
-            print("Model changed to: Turi")
-        } else if sender.selectedSegmentIndex == 1 {
-            print("Model changed to: Sklearn")
-        }
+                print("Model changed to: Turi")
+            } else if sender.selectedSegmentIndex == 1 {
+                print("Model changed to: Sklearn")
+            }
     }
     @IBAction func clearCanvas(_ sender: UIButton) {
         drawingView.clear()
@@ -50,7 +49,10 @@ class ViewController: UIViewController {
             return
         }
 
-        let url = URL(string: "http://192.168.1.69:8000/train_model_turi/\(dsid)")!
+        // let url = URL(string: "http://192.168.50.164:8000/train_model_turi/\(dsid)")!
+        let selectedModelType = modelSelector.selectedSegmentIndex == 0 ? "turi" : "sklearn"
+        // TODO: switch to your own IP address
+        let url = URL(string: "http://192.168.50.164:8000/train_model_\(selectedModelType)/\(dsid)")!
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
 
@@ -91,15 +93,16 @@ class ViewController: UIViewController {
 
 
     func uploadImage(image: UIImage, label: String, dsid: Int) {
-        let url = URL(string: "http://192.168.1.69:8000/labeled_data/")!
+        // TODO: switch to your own IP address
+        let url = URL(string: "http://192.168.50.164:8000/labeled_data/")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        // 将图像数据编码为 Base64
+       
         let imageData = image.jpegData(compressionQuality: 0.8)!.base64EncodedString()
 
-        // 构建 JSON 请求体
+        // JSON
         let json: [String: Any] = [
             "image_base64": imageData,
             "label": label,
@@ -137,9 +140,11 @@ class ViewController: UIViewController {
             return
         }
 
-//        let url = URL(string: "http://192.168.1.69:8000/train_model_turi/\(dsid)")!
-        let modelType = modelSelector.selectedSegmentIndex == 0 ? "turi" : "sklearn"
-        let url = URL(string: "http://192.168.1.69:8000/train_model_\(modelType)/\(dsid)")!
+        let selectedModelType = modelSelector.selectedSegmentIndex == 0 ? "turi" : "sklearn"
+        
+        // TODO: switch to your own IP address
+        let url = URL(string: "http://192.168.50.164:8000/train_model_\(selectedModelType)/\(dsid)")!
+        print("Training URL: \(url)")  // 打印 URL 以确认请求
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
 
@@ -165,18 +170,19 @@ class ViewController: UIViewController {
 
 
     func predictImage(image: UIImage, dsid: Int) {
-//        let url = URL(string: "http://192.168.1.69:8000/predict_turi/")!
+        // TODO: switch to your own IP address
         let modelType = modelSelector.selectedSegmentIndex == 0 ? "turi" : "sklearn"
-        let url = URL(string: "http://192.168.1.69:8000/predict_\(modelType)/")!
+        
+        let url = URL(string: "http://192.168.50.164:8000/predict_\(modelType)/")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        // 将图转换为 Base64
+    
         let imageData = image.jpegData(compressionQuality: 0.8)!
         let base64Image = imageData.base64EncodedString()
 
-        // 构造 JSON 请求体
+        // JSON request
         let json: [String: Any] = [
             "image": base64Image,
             "dsid": dsid
