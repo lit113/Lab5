@@ -45,5 +45,9 @@ This guide explains how to set up the environment for the project hosted on [Git
    In the results, find the network interface you are connected to (typically `en0` or `wlan0`), and look for something like `inet 192.168.x.x`. The `192.168.x.x` part is your local network IP address. Ensure all backend ports are using your own IP address to enable proper interaction between the frontend and backend.
 
 
+5. **DSID Explanation**
+
+   The DSID input is not an index pointing to a single data entry in a traditional database. Instead, it represents a group of data. For example, DSID = 1 can include entries like 1, 2, 3, and they are all treated as part of the same group. When you click "train," the training process is based on this group of data, and it will recognize the numbers you input subsequently.
+
 
 
