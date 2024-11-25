@@ -12,6 +12,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var numberTextField: UITextField!
     @IBOutlet weak var dsidTextField: UITextField!
     @IBOutlet weak var modelSelector: UISegmentedControl!
+    @IBOutlet weak var predictionLabel: UILabel!
+
     
     // TODO: switch to your own IP address
     private let serverIP = "192.168.1.69:8000"
@@ -208,6 +210,10 @@ class ViewController: UIViewController {
                             let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
                             if let prediction = jsonResponse?["prediction"] as? Int {
                                 print("Prediction: \(prediction)")
+                                // Update the label with the prediction result
+                                DispatchQueue.main.async {
+                                    self.predictionLabel.text = "Prediction: \(prediction)"
+                                }
                             } else if let errorMessage = jsonResponse?["error"] as? String {
                                 print("Server error: \(errorMessage)")
                             } else {
