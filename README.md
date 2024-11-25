@@ -17,6 +17,12 @@ This guide explains how to set up the environment for the project hosted on [Git
    ```bash
    ps aux | grep mongod
    ```
+   if Mongo is not running:
+
+   ```bash
+   mongod --dbpath ~/mongodb-data
+
+   ```
 
 2. **Navigate to Your Python File Directory**
 
@@ -25,6 +31,7 @@ This guide explains how to set up the environment for the project hosted on [Git
    ```bash
    cd <your_file_path>
    ```
+   
 
 3. **Run the Backend with Uvicorn**
 
