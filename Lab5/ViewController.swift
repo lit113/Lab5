@@ -11,7 +11,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var drawingView: DrawingView!
     @IBOutlet weak var numberTextField: UITextField!
     @IBOutlet weak var dsidTextField: UITextField!
-    @IBOutlet weak var modelSelector: UISegmentedControl! // New UISegmentedControl for model selection
+    @IBOutlet weak var modelSelector: UISegmentedControl!
+    
+    // TODO: switch to your own IP address
+    private let serverIP = "192.168.1.69:8000"
+    
     @IBAction func modelSelectionChanged(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
                 print("Model changed to: Turi")
@@ -49,10 +53,8 @@ class ViewController: UIViewController {
             return
         }
 
-        // let url = URL(string: "http://192.168.50.164:8000/train_model_turi/\(dsid)")!
         let selectedModelType = modelSelector.selectedSegmentIndex == 0 ? "turi" : "sklearn"
-        // TODO: switch to your own IP address
-        let url = URL(string: "http://192.168.50.164:8000/train_model_\(selectedModelType)/\(dsid)")!
+        let url = URL(string: "http://\(serverIP)/train_model_\(selectedModelType)/\(dsid)")!
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
 
@@ -93,8 +95,7 @@ class ViewController: UIViewController {
 
 
     func uploadImage(image: UIImage, label: String, dsid: Int) {
-        // TODO: switch to your own IP address
-        let url = URL(string: "http://192.168.50.164:8000/labeled_data/")!
+        let url = URL(string: "http://\(serverIP)/labeled_data/")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -142,8 +143,7 @@ class ViewController: UIViewController {
 
         let selectedModelType = modelSelector.selectedSegmentIndex == 0 ? "turi" : "sklearn"
         
-        // TODO: switch to your own IP address
-        let url = URL(string: "http://192.168.50.164:8000/train_model_\(selectedModelType)/\(dsid)")!
+        let url = URL(string: "http://\(serverIP)/train_model_\(selectedModelType)/\(dsid)")!
         print("Training URL: \(url)")  // 打印 URL 以确认请求
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
@@ -170,10 +170,9 @@ class ViewController: UIViewController {
 
 
     func predictImage(image: UIImage, dsid: Int) {
-        // TODO: switch to your own IP address
         let modelType = modelSelector.selectedSegmentIndex == 0 ? "turi" : "sklearn"
         
-        let url = URL(string: "http://192.168.50.164:8000/predict_\(modelType)/")!
+        let url = URL(string: "http://\(serverIP)/predict_\(modelType)/")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -196,18 +195,6 @@ class ViewController: UIViewController {
                 return
             }
 
-//            if let data = data {
-//                do {
-//                    let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-//                    if let prediction = jsonResponse?["prediction"] as? String {
-//                        print("Prediction: \(prediction)") // 打印预测结果
-//                    } else {
-//                        print("Prediction field missing in response.")
-//                    }
-//                } catch {
-//                    print("Error decoding response: \(error.localizedDescription)")
-//                }
-//            }
             if let data = data {
                         do {
                             if let responseString = String(data: data, encoding: .utf8) {
@@ -228,28 +215,6 @@ class ViewController: UIViewController {
                     }
         }
         task.resume()
-    }
-
-
-    
-    func createMultipartData(image: UIImage, label: String?, boundary: String) -> Data {
-        var data = Data()
-        let imageData = image.jpegData(compressionQuality: 0.8)!
-
-        if let label = label, !label.isEmpty {  // 如果 label 存在并且非空
-            data.append("--\(boundary)\r\n".data(using: .utf8)!)
-            data.append("Content-Disposition: form-data; name=\"label\"\r\n\r\n".data(using: .utf8)!)
-            data.append("\(label)\r\n".data(using: .utf8)!)
-        }
-
-        data.append("--\(boundary)\r\n".data(using: .utf8)!)
-        data.append("Content-Disposition: form-data; name=\"file\"; filename=\"drawing.jpg\"\r\n".data(using: .utf8)!)
-        data.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
-        data.append(imageData)
-        data.append("\r\n".data(using: .utf8)!)
-
-        data.append("--\(boundary)--\r\n".data(using: .utf8)!)
-        return data
     }
 
     
