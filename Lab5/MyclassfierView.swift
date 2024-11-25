@@ -25,17 +25,17 @@ class ClassifierViewController: UIViewController {
     }
 
     @IBAction func classifyDrawing(_ sender: UIButton) {
-        // 从 DrawingView 获取 UIImage
+        // Get UIImage from DrawingView
        guard let image = drawingView.getImage() else {
            print("Image is missing")
            resultLabel.text = "Error: Could not capture the drawing"
            return
        }
-       classifyImage(image: image) // 调用分类方法
+       classifyImage(image: image) // Call classifier
     }
     @IBAction func clearDrawing(_ sender: UIButton) {
             drawingView.clear()
-            resultLabel.text = "" // 清除结果显示
+            resultLabel.text = "" // Clear results
         }
     
     
@@ -51,7 +51,7 @@ class ClassifierViewController: UIViewController {
         }()
    
     func classifyImage(image: UIImage) {
-        // 将 UIImage 转换为 CIImage
+        // Convert UIImage to CIImage
         guard let ciImage = CIImage(image: image) else {
             print("Could not convert UIImage to CIImage")
             resultLabel.text = "Error: Unable to process the drawing"
@@ -67,7 +67,7 @@ class ClassifierViewController: UIViewController {
                     return
                 }
 
-                // 获取分类结果
+                // Get classified results
                 guard let results = request.results as? [VNClassificationObservation],
                       let firstResult = results.first else {
                     print("No classification results found")
@@ -75,7 +75,7 @@ class ClassifierViewController: UIViewController {
                     return
                 }
 
-                // 更新 UI 显示结果
+                // Update UI to show results
                 print("Classification Result: \(firstResult.identifier)")
                 self?.resultLabel.text = """
                 Result: \(firstResult.identifier)
@@ -83,7 +83,7 @@ class ClassifierViewController: UIViewController {
             }
         }
 
-        // 在后台线程执行分类
+        // Perform classification
         DispatchQueue.global(qos: .userInitiated).async {
             let handler = VNImageRequestHandler(ciImage: ciImage, options: [:])
             do {
@@ -96,7 +96,4 @@ class ClassifierViewController: UIViewController {
             }
         }
     }
-
-   
-    
 }
