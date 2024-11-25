@@ -16,7 +16,7 @@ class ViewController: UIViewController {
 
     
     // TODO: switch to your own IP address
-    private let serverIP = "192.168.1.69:8000"
+    private let serverIP = "192.168.50.164:8000"
     
     // Handle changes in the model selector
     @IBAction func modelSelectionChanged(_ sender: UISegmentedControl) {
@@ -30,6 +30,7 @@ class ViewController: UIViewController {
     // Clear the drawing canvas
     @IBAction func clearCanvas(_ sender: UIButton) {
         drawingView.clear()
+        clearResult()
     }
 
     // Handle submission of the drawing
@@ -225,6 +226,11 @@ class ViewController: UIViewController {
                     }
         }
         task.resume()
+    }
+    func clearResult() {
+        DispatchQueue.main.async {
+            self.predictionLabel.text = "" // Clear the result label
+        }
     }
 
     
